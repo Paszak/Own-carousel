@@ -1,0 +1,41 @@
+{
+  "name": "zadanie_10_3-Carousel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:html && npm run test:js",
+    "test:html": "glob-run nu-html-checker *.html",
+    "test:js": "glob-run jshint js/*.js",
+    "build": "npm run build:clean && npm run build:sass && npm run build:autoprefixer && npm run test",
+    "build:sass": "glob-run sass --sourcemap=none --update *.scss:style.css",
+    "build:autoprefixer": "autoprefixer-cli style.css",
+    "build:clean": "glob-run rimraf css",
+    "watch": "parallelshell \"npm run watch:sassprefixer\" \"npm run watch:browser-sync\" ",
+    "watch:sass": "sass --watch style.scss:style.css",
+    "watch:autoprefixer": "onchange -d 100 style.css -- autoprefixer-cli -o style.prefixed.css style.css",
+    "watch:browser-sync": "glob-run browser-sync start --server --files \"*.css\" \"*.html\" ",
+    "watch:sassprefixer": "onchange -d 100 style.scss -- sass style.scss:style.css && onchange -d 100 style.css -- autoprefixer-cli -o style.prefixed.css style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Paszak/zadanie_10_3-Carousel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Paszak/zadanie_10_3-Carousel/issues"
+  },
+  "homepage": "https://github.com/Paszak/zadanie_10_3-Carousel#readme",
+  "dependencies": {
+    "autoprefixer-cli": "^1.0.0",
+    "browser-sync": "^2.18.13",
+    "glob-run": "^0.1.6",
+    "jshint": "^2.9.5",
+    "nu-html-checker": "^0.1.0",
+    "onchange": "^3.2.1",
+    "parallelshell": "^3.0.2",
+    "rimraf": "^2.6.2"
+  }
+}
