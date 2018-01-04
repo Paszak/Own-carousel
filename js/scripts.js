@@ -1,47 +1,62 @@
 $(function(){
 
     var carouselList = $('#carousel ul');
+    var indicators = $('.indicators');
+    var currentSlide = 0;
+    var interval;
+    
+    startInterval();
 
-    var myTimer = setInterval(changeSlide, 5000);
+    function startInterval() {
+        interval = setInterval(nextSlide, 5000);
+    }
 
-    function changeSlide() {
-        carouselList.animate({'marginLeft':-400}, 500, moveFirstSlide);
+    function restartInterval() {
+        clearInterval(interval);
+        startInterval();
+    }
+
+    function nextSlide() {
+        currentSlide > 3 ? currentSlide = 0 : currentSlide++;
+        renderSlide(currentSlide);
     }
 
     function prevSlide() {
-        carouselList.animate({'marginRight':-400}, 500, moveLastSlide);
+        currentSlide < 1 ? currentSlide = 4 : currentSlide--;
+        renderSlide(currentSlide);
     }
 
-    function moveFirstSlide() {
-        var firstItem = carouselList.find("li:first");
-        var lastItem = carouselList.find("li:last");
-        lastItem.after(firstItem);
-        carouselList.css({marginLeft:0});
-        // var activeDot = dots.find("")
+    function renderSlide(index) {
+        setActiveIndicator(index);
+        carouselList.animate({marginLeft: -400 * index}, 500);
     }
 
-    function moveLastSlide() {
-        var firstItem = carouselList.find("li:last");
-        var lastItem = carouselList.find("li:first");
-        lastItem.before(firstItem);
-        carouselList.css({marginRight:0});
+    function setActiveIndicator(index) {
+        indicators.find('.active').removeClass('active');
+        indicators.find('span').eq(index).addClass('active');
     }
 
     var nextButton = $('.next'),
         prevButton = $('.prev');
 
     nextButton.click(function(event) {
-        clearInterval(myTimer);
-        changeSlide();
-        myTimer = setInterval(changeSlide, 5000);
+        event.preventDefault();
+        nextSlide();
+        restartInterval();
     });
 
     prevButton.click(function(event) {
-        clearInterval(myTimer);
+        event.preventDefault();
         prevSlide();
-        myTimer = setInterval(changeSlide, 5000);
+        restartInterval();
     });
 
-    // var dots = $('.indicators');
+    indicators.on('click', 'span', function() {
+        currentSlide = $(this).index();
+        renderSlide(currentSlide);
+        restartInterval();
+    });
 
 });
+
+
